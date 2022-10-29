@@ -2,16 +2,20 @@ import requests
 from sys import argv
 from API_KEY import ApiKey
 
-url = ('https://newsapi.org/v2/top-headlines?')
 
-def search_by(category):
-    paramaters = {
-        'category': category,
+def search_Top_by_cat(category_data):
+    url = ('https://newsapi.org/v2/top-headlines?')
+    parameters = {
+        'category': category_data,
         "country": 'in',
         "apiKey": ApiKey
     }
+    article_data(parameters, url)
 
-    resp = requests.get(url, params=paramaters)
+
+def article_data(parameters, url):
+    # print(url)
+    resp = requests.get(url, params=parameters)
     arti = resp.json()['articles']
     result = []
 
@@ -20,15 +24,27 @@ def search_by(category):
             "author" : data['author'],
             "title" : data["title"],
             "description" : data["description"],
-            "content" : data["content"]
+            "content" : data["content"],
+            "link" : data['url']
             })
     for x in result:
         print("Author:",x['author'])
         print("Title:",x['title'])
         print("Description:",x['description'])
         print("Contents:",x['content'])
+        print("Links/URL:",x['link'])
         print(" ")
 
 
+def search_by_keyElements(name):
+    url = ('https://newsapi.org/v2/everything?')
+    parameters = {
+        'q' : name,
+        'apiKey' : ApiKey
+    }
+    article_data(parameters, url)
+
+
 if __name__ == '__main__':
-    search_by(argv[1])
+    search_Top_by_cat(argv[1])
+    search_by_keyElements(argv[1])
